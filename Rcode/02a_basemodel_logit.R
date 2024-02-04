@@ -1,0 +1,28 @@
+rm(list = ls())
+
+# Laden relevanter R packages
+library(caret)
+library(MLmetrics)
+library(pROC)
+library(ROCR)
+
+# Globale Objekte
+load("Robjects/input_data.Rdata")
+
+############
+# Modelltraining
+model_logit <- glm(success~PSP+amount_log+amount+country+attempt+secured+card+tmsp_wday+tmsp_is_weekend+tmsp_hour+tmsp_minute, 
+                   family="binomial", 
+                   data=train_data
+)
+summary(model_logit)
+anova(model_logit)
+
+# Speichere Modell
+model_file <- list(
+  model = model_logit,
+  model_family = "Logistische Regression",
+  model_type = "Originaldaten, alle Parameter"
+)
+save(model_file, file = "Robjects/models/model_logit.Rdata")
+
